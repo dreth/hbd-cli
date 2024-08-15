@@ -1,31 +1,56 @@
 package main
 
 import (
+	"fmt"
 	"hbd-cli/auth"
+	"hbd-cli/birthdays"
+	"hbd-cli/general"
 
 	"github.com/spf13/cobra"
 )
 
+var Version = "dev"
+
 func main() {
 	var rootCmd = &cobra.Command{
-		Use:   "hbd",
-		Short: "hbd-cli is a CLI tool to manage birthday reminders and notifications using the HBD backend",
+		Use:     "hbd",
+		Short:   general.SplashScreen(true),
+		Long:    general.SplashScreen(true),
+		Version: general.SplashScreen(false) + "\n" + fmt.Sprintf("hbd-cli version: %s", Version) + "\033[32m",
 	}
 
-	// Add the login command to the root command
-	rootCmd.AddCommand(auth.Login())
-	rootCmd.AddCommand(auth.Register())
-	rootCmd.AddCommand(auth.Me())
-	rootCmd.AddCommand(auth.ModifyUser())
+	// Create an 'auth' parent command
+	var authCmd = &cobra.Command{
+		Use:   "auth",
+		Short: "Authentication related commands (login, register, etc.)",
+	}
 
-	// Splash screen
-	println(`
-  _     _         _            _ _ 
- | |__ | |__   __| |       ___| (_)
- | '_ \| '_ \ / _' |_____ / __| | |
- | | | | |_) | (_| |_____| (__| | |
- |_| |_|_.__/ \__,_|      \___|_|_|
-`)
+	// Create a 'birthdays' parent command
+	var birthdaysCmd = &cobra.Command{
+		Use:   "birthdays",
+		Short: "Birthday related commands (add, list, delete, modify)",
+	}
+
+	// Add authentication subcommands under the 'auth' parent command
+	authCmd.AddCommand(auth.Login())
+	authCmd.AddCommand(auth.Register())
+	authCmd.AddCommand(auth.Me())
+	authCmd.AddCommand(auth.ModifyUser())
+	authCmd.AddCommand(auth.DeleteUser())
+	authCmd.AddCommand(auth.GeneratePassword())
+
+	// Add birthday subcommands under the 'birthdays' parent command
+	birthdaysCmd.AddCommand(birthdays.AddBirthday())
+	birthdaysCmd.AddCommand(birthdays.ListBirthdays())
+	birthdaysCmd.AddCommand(birthdays.DeleteBirthday())
+	birthdaysCmd.AddCommand(birthdays.ModifyBirthday())
+
+	// Add the internal verbs to the root command
+	rootCmd.AddCommand(authCmd)
+	rootCmd.AddCommand(birthdaysCmd)
+
+	// Healthcheck command
+	rootCmd.AddCommand(general.HealthCheck())
 
 	// Execute the root command
 	rootCmd.Execute()

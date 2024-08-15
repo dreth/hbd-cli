@@ -12,12 +12,8 @@ import (
 )
 
 func Login() *cobra.Command {
-	var host string
-	var port string
-	var email string
-	var password string
+	var host, port, email, password, credsPath string
 	var ssl bool
-	var credsPath string
 
 	var loginCmd = &cobra.Command{
 		Use:   "login",
@@ -34,7 +30,7 @@ Environment variables:
   HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
-  hbd-cli login --email="user@example.com" --password="yourpassword" --host="example.com" --ssl --creds-path="~/.hbd/credentials"
+  hbd-cli login --email="user@hbd.lotiguere.com" --password="yourpassword" --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials"
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars

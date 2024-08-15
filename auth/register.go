@@ -12,16 +12,8 @@ import (
 )
 
 func Register() *cobra.Command {
-	var host string
-	var port string
-	var email string
-	var password string
-	var reminderTime string
-	var timezone string
-	var telegramBotAPIKey string
-	var telegramUserID string
+	var host, port, email, password, reminderTime, timezone, telegramBotAPIKey, telegramUserID, credsPath string
 	var ssl bool
-	var credsPath string
 
 	var registerCmd = &cobra.Command{
 		Use:   "register",
@@ -42,7 +34,7 @@ Environment variables:
   HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
-  hbd-cli register --email="user@example.com" --password="yourpassword" --reminder-time="15:04" --timezone="America/New_York" --telegram-bot-api-key="your-bot-api-key" --telegram-user-id="your-user-id"
+  hbd-cli register --email="user@hbd.lotiguere.com" --password="yourpassword" --reminder-time="15:04" --timezone="America/New_York" --telegram-bot-api-key="your-bot-api-key" --telegram-user-id="your-user-id"
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars
@@ -75,6 +67,20 @@ Example usage:
 
 			// Check if any required details are empty
 			if email == "" || password == "" || reminderTime == "" || timezone == "" || telegramBotAPIKey == "" || telegramUserID == "" {
+				// Print the missing details
+				for i, detail := range []string{email, password, reminderTime, timezone, telegramBotAPIKey, telegramUserID} {
+					if detail == "" {
+						fmt.Printf("Missing detail: %s\n", []string{
+							"email",
+							"password",
+							"reminder-time",
+							"timezone",
+							"telegram-bot-api-key",
+							"telegram-user-id"}[i],
+						)
+					}
+				}
+
 				helper.HandleErrorExitStr("Error registering", "All registration details must be provided either via flags or environment variables")
 			}
 

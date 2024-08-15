@@ -2,6 +2,7 @@ package helper
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -13,9 +14,8 @@ type Credentials struct {
 // GetDefaultCredsPath returns the default path for the credentials file
 func GetDefaultCredsPath() string {
 	home, err := os.UserHomeDir()
-	if err != nil {
-		HandleErrorExit("Error finding home directory", err)
-	}
+	HandleErrorExit("Error finding home directory", err)
+
 	return filepath.Join(home, ".hbd", "credentials")
 }
 
@@ -40,15 +40,22 @@ func LoadCredentials(path string) (*Credentials, error) {
 
 // SaveCredentials saves the credentials to the specified path
 func SaveCredentials(path string, creds *Credentials) error {
-	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
-		return err
-	}
+	err := os.MkdirAll(filepath.Dir(path), 0700)
+	HandleErrorExit("Error creating credentials directory", err)
 
 	file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
-	if err != nil {
-		return err
-	}
+	HandleErrorExit("Error opening credentials file", err)
 	defer file.Close()
 
 	return json.NewEncoder(file).Encode(creds)
+}
+
+// DeleteCredentials deletes the credentials file at the specified path.
+func DeleteCredentials(credsPath string) error {
+	// Attempt to remove the file
+	err := os.Remove(credsPath)
+	if err != nil {
+		return fmt.Errorf("failed to delete credentials file at %s: %v", credsPath, err)
+	}
+	return nil
 }

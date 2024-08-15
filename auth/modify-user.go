@@ -12,16 +12,8 @@ import (
 )
 
 func ModifyUser() *cobra.Command {
-	var host string
-	var port string
-	var newEmail string
-	var newPassword string
-	var newReminderTime string
-	var newTimezone string
-	var newTelegramBotAPIKey string
-	var newTelegramUserID string
+	var host, port, newEmail, newPassword, newReminderTime, newTimezone, newTelegramBotAPIKey, newTelegramUserID, credsPath string
 	var ssl bool
-	var credsPath string
 
 	var modifyUserCmd = &cobra.Command{
 		Use:   "modify-user",
@@ -42,7 +34,7 @@ Environment variables:
   HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
-  hbd-cli modify-user --new-email="newuser@example.com" --new-password="newpassword" --new-reminder-time="15:04" --new-timezone="America/New_York" --new-telegram-bot-api-key="your-new-bot-api-key" --new-telegram-user-id="your-new-user-id"
+  hbd-cli modify-user --new-email="newuser@hbd.lotiguere.com" --new-password="newpassword" --new-reminder-time="15:04" --new-timezone="America/New_York" --new-telegram-bot-api-key="your-new-bot-api-key" --new-telegram-user-id="your-new-user-id"
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars

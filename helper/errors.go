@@ -53,6 +53,6 @@ func errorMsgWithStr(msg string, str string) {
 	}
 
 	if str != "" {
-		fmt.Printf("%s: %s\n", msg, str)
+		fmt.Printf("\n%s: %s\n", msg, str)
 	}
 }

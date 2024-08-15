@@ -11,10 +11,8 @@ import (
 )
 
 func Me() *cobra.Command {
-	var host string
-	var port string
+	var host, port, credsPath string
 	var ssl bool
-	var credsPath string
 
 	var meCmd = &cobra.Command{
 		Use:   "me",
@@ -28,7 +26,7 @@ Environment variables:
   HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
-  hbd-cli me --host="example.com" --ssl --creds-path="~/.hbd/credentials"
+  hbd-cli me --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials"
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars
@@ -64,7 +62,7 @@ Example usage:
 			fmt.Printf("Telegram User ID: %s\n", userData.TelegramUserID)
 			fmt.Printf("Reminder Time: %s\n", userData.ReminderTime)
 			fmt.Printf("Timezone: %s\n", userData.Timezone)
-			fmt.Printf("To view the birthdays use the 'birthdays' verb\n")
+			fmt.Printf("To view the birthdays use the 'birthdays' verb\n\n")
 		},
 	}
 

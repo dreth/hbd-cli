@@ -23,11 +23,6 @@ func DefaultPort() string {
 	port := viper.GetString("HBD_PORT")
 	host := viper.GetString("HBD_HOST")
 
-	// If the host is 0.0.0.0, default the port to 8417 if HBD_PORT is empty
-	if port == "" && host == "0.0.0.0" {
-		port = "8417"
-	}
-
 	// If both the host and port are empty, default the port to 8417
 	if port == "" && host == "" {
 		port = "8417"
