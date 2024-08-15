@@ -36,7 +36,7 @@ Example usage:
 
 			// Ask for confirmation
 			reader := bufio.NewReader(os.Stdin)
-			fmt.Println("Are you sure you want to delete your account? This action cannot be undone. Type 'yes' to proceed:")
+			fmt.Println("Are you sure you want to delete your account? This action cannot be undone. Type 'yes' to proceed: ")
 			confirmation, _ := reader.ReadString('\n')
 			confirmation = strings.TrimSpace(confirmation)
 

@@ -38,6 +38,7 @@ func main() {
 	authCmd.AddCommand(auth.ModifyUser())
 	authCmd.AddCommand(auth.DeleteUser())
 	authCmd.AddCommand(auth.GeneratePassword())
+	authCmd.AddCommand(auth.Logout())
 
 	// Add birthday subcommands under the 'birthdays' parent command
 	birthdaysCmd.AddCommand(birthdays.AddBirthday())

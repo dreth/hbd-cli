@@ -15,7 +15,7 @@ func GeneratePassword() *cobra.Command {
 	var generatePasswordCmd = &cobra.Command{
 		Use:   "generate-password",
 		Short: "Generate a new password",
-		Long: `The generate-password command generates a new secure password for use with the HBD service.
+		Long: `The generate-password command requests the HBD server to generate a new password.
 
 Example usage:
   hbd-cli generate-password --host="hbd.lotiguere.com" --ssl

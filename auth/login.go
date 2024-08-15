@@ -13,6 +13,7 @@ import (
 
 func Login() *cobra.Command {
 	var host, port, email, password, credsPath string
+	var tokenDuration int
 	var ssl bool
 
 	var loginCmd = &cobra.Command{
@@ -30,7 +31,7 @@ Environment variables:
   HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
-  hbd-cli login --email="user@hbd.lotiguere.com" --password="yourpassword" --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials"
+  hbd-cli login --email="user@hbd.lotiguere.com" --password="yourpassword" --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials" --token-duration=3600
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars
@@ -39,7 +40,9 @@ Example usage:
 			// Load credentials
 			credsPath = filepath.Join(credsPath, host)
 			creds, err := helper.LoadCredentials(credsPath)
-			helper.HandleError("Error loading credentials from credentials file", err)
+			if err == nil {
+				fmt.Println("Credentials exist, they will be overwritten.")
+			}
 
 			// Check if email and password are an environment variable
 			if email == "" {
@@ -65,7 +68,7 @@ Example usage:
 			}
 
 			// Make the request
-			loginSuccess, err := api.Login(url, loginReq)
+			loginSuccess, err := api.Login(url, loginReq, tokenDuration)
 			helper.HandleErrorExit("Error logging in, wrong email or password", err)
 
 			// Save the token to the credentials file
@@ -86,6 +89,7 @@ Example usage:
 	loginCmd.Flags().StringVar(&password, "password", "", "Password for login")
 	loginCmd.Flags().BoolVar(&ssl, "ssl", helper.DefaultSSL(), "Use SSL (https) for the connection")
 	loginCmd.Flags().StringVar(&credsPath, "creds-path", helper.GetDefaultCredsPath(), "Path to the credentials file")
+	loginCmd.Flags().IntVar(&tokenDuration, "token-duration", 720, "Duration of the JWT token in hours. Default is 720 hours (30 days).")
 
 	// Return the login command
 	return loginCmd

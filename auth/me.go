@@ -12,7 +12,7 @@ import (
 
 func Me() *cobra.Command {
 	var host, port, credsPath string
-	var ssl bool
+	var ssl, dotEnvFormat bool
 
 	var meCmd = &cobra.Command{
 		Use:   "me",
@@ -26,7 +26,7 @@ Environment variables:
   HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
-  hbd-cli me --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials"
+  hbd-cli me --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials" --dotenv
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars
@@ -56,6 +56,18 @@ Example usage:
 			helper.HandleErrorExit("Error retrieving user data", err)
 
 			// Print the retrieved user data
+			// In dotenv format
+			if dotEnvFormat {
+				fmt.Printf("HBD_USER_ID=%d\n", userData.ID)
+				fmt.Printf("HBD_TELEGRAM_BOT_API_KEY=%s\n", userData.TelegramBotAPIKey)
+				fmt.Printf("HBD_TELEGRAM_USER_ID=%s\n", userData.TelegramUserID)
+				fmt.Printf("HBD_REMINDER_TIME=%s\n", userData.ReminderTime)
+				fmt.Printf("HBD_TIMEZONE=%s\n\n", userData.Timezone)
+				fmt.Printf("# To view the birthdays use the 'birthdays' verb\n")
+				return
+			}
+			
+			// In regular format
 			fmt.Printf("User Data:\n")
 			fmt.Printf("ID: %d\n", userData.ID)
 			fmt.Printf("Telegram Bot API Key: %s\n", userData.TelegramBotAPIKey)
@@ -70,6 +82,7 @@ Example usage:
 	meCmd.Flags().StringVar(&host, "host", helper.DefaultHost(), "Host for the service")
 	meCmd.Flags().StringVar(&port, "port", helper.DefaultPort(), "Port for the service")
 	meCmd.Flags().BoolVar(&ssl, "ssl", helper.DefaultSSL(), "Use SSL (https) for the connection")
+	meCmd.Flags().BoolVar(&dotEnvFormat, "dotenv", false, "Print the output in dotenv format (KEY=VALUE)")
 	meCmd.Flags().StringVar(&credsPath, "creds-path", helper.GetDefaultCredsPath(), "Path to the credentials file")
 
 	// Return the me command

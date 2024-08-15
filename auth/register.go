@@ -13,6 +13,7 @@ import (
 
 func Register() *cobra.Command {
 	var host, port, email, password, reminderTime, timezone, telegramBotAPIKey, telegramUserID, credsPath string
+	var tokenDuration int
 	var ssl bool
 
 	var registerCmd = &cobra.Command{
@@ -98,7 +99,7 @@ Example usage:
 			}
 
 			// Make the registration request
-			loginSuccess, err := api.Register(url, registerReq)
+			loginSuccess, err := api.Register(url, registerReq, tokenDuration)
 			helper.HandleErrorExit("Error registering user", err)
 
 			// Save the token to the credentials file
@@ -123,6 +124,7 @@ Example usage:
 	registerCmd.Flags().StringVar(&telegramUserID, "telegram-user-id", "", "Telegram user ID for registration")
 	registerCmd.Flags().BoolVar(&ssl, "ssl", helper.DefaultSSL(), "Use SSL (https) for the connection")
 	registerCmd.Flags().StringVar(&credsPath, "creds-path", helper.GetDefaultCredsPath(), "Path to the credentials file")
+	registerCmd.Flags().IntVar(&tokenDuration, "token-duration", 720, "Duration of the JWT token in hours. Default is 720 hours (30 days).")
 
 	// Return the register command
 	return registerCmd
