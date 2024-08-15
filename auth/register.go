@@ -5,6 +5,7 @@ import (
 	"hbd-cli/api"
 	"hbd-cli/helper"
 	"hbd-cli/structs"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -12,7 +13,7 @@ import (
 
 func Register() *cobra.Command {
 	var host string
-	var port int
+	var port string
 	var email string
 	var password string
 	var reminderTime string
@@ -36,15 +37,19 @@ Environment variables:
   HBD_TIMEZONE - The timezone for the reminder.
   HBD_TELEGRAM_BOT_API_KEY - The Telegram bot API key.
   HBD_TELEGRAM_USER_ID - The Telegram user ID.
+  HBD_HOST - The host for the service. Defaults to 0.0.0.0.
+  HBD_PORT - The port for the service.
+  HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
   hbd-cli register --email="user@example.com" --password="yourpassword" --reminder-time="15:04" --timezone="America/New_York" --telegram-bot-api-key="your-bot-api-key" --telegram-user-id="your-user-id"
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
-			// Read env vars
-			viper.AutomaticEnv()
+			// Load env vars
+			helper.LoadEnvVars()
 
 			// Load credentials
+			credsPath = filepath.Join(credsPath, host)
 			creds, err := helper.LoadCredentials(credsPath)
 			helper.HandleError("Error loading credentials from credentials file", err)
 
@@ -73,14 +78,8 @@ Example usage:
 				helper.HandleErrorExitStr("Error registering", "All registration details must be provided either via flags or environment variables")
 			}
 
-			// Determine protocol based on ssl flag
-			protocol := "http"
-			if ssl {
-				protocol = "https"
-			}
-
 			// Create the URL
-			url := fmt.Sprintf("%s://%s:%d", protocol, host, port)
+			url := helper.GenUrl(host, port, ssl)
 
 			// Create the JSON payload for registration
 			registerReq := structs.RegisterRequest{
@@ -108,15 +107,15 @@ Example usage:
 	}
 
 	// Add flags to the register command
-	registerCmd.Flags().StringVar(&host, "host", "0.0.0.0", "Host for the service")
-	registerCmd.Flags().IntVar(&port, "port", 8417, "Port for the service")
+	registerCmd.Flags().StringVar(&host, "host", helper.DefaultHost(), "Host for the service")
+	registerCmd.Flags().StringVar(&port, "port", helper.DefaultPort(), "Port for the service")
 	registerCmd.Flags().StringVar(&email, "email", "", "Email for registration")
 	registerCmd.Flags().StringVar(&password, "password", "", "Password for registration")
 	registerCmd.Flags().StringVar(&reminderTime, "reminder-time", "", "Reminder time (HH:MM) for registration")
 	registerCmd.Flags().StringVar(&timezone, "timezone", "", "Timezone for the reminder")
 	registerCmd.Flags().StringVar(&telegramBotAPIKey, "telegram-bot-api-key", "", "Telegram bot API key for registration")
 	registerCmd.Flags().StringVar(&telegramUserID, "telegram-user-id", "", "Telegram user ID for registration")
-	registerCmd.Flags().BoolVar(&ssl, "ssl", false, "Use SSL (https) for the connection")
+	registerCmd.Flags().BoolVar(&ssl, "ssl", helper.DefaultSSL(), "Use SSL (https) for the connection")
 	registerCmd.Flags().StringVar(&credsPath, "creds-path", helper.GetDefaultCredsPath(), "Path to the credentials file")
 
 	// Return the register command

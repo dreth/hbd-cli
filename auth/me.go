@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"hbd-cli/api"
 	"hbd-cli/helper"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -11,7 +12,7 @@ import (
 
 func Me() *cobra.Command {
 	var host string
-	var port int
+	var port string
 	var ssl bool
 	var credsPath string
 
@@ -20,16 +21,21 @@ func Me() *cobra.Command {
 		Short: "Get authenticated user's data",
 		Long: `The "me" command retrieves the authenticated user's data from the HBD service.
 The data includes the Telegram bot API key, user ID, reminder time, and birthdays.
-A valid JWT token must be provided either through a credentials file or the environment variable HBD_TOKEN.
 
 Environment variables:
-  HBD_TOKEN - The JWT token used for authentication.
+  HBD_HOST - The host for the service. Defaults to 0.0.0.0.
+  HBD_PORT - The port for the service.
+  HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
   hbd-cli me --host="example.com" --ssl --creds-path="~/.hbd/credentials"
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
+			// Load env vars
+			helper.LoadEnvVars()
+
 			// Load credentials
+			credsPath = filepath.Join(credsPath, host)
 			creds, err := helper.LoadCredentials(credsPath)
 			helper.HandleError("Error loading credentials from credentials file", err)
 
@@ -44,14 +50,8 @@ Example usage:
 				helper.HandleErrorExitStr("Error", "A valid JWT token must be provided either via the credentials file or the environment variable HBD_TOKEN")
 			}
 
-			// Determine protocol based on ssl flag
-			protocol := "http"
-			if ssl {
-				protocol = "https"
-			}
-
 			// Create the URL
-			url := fmt.Sprintf("%s://%s:%d", protocol, host, port)
+			url := helper.GenUrl(host, port, ssl)
 
 			// Make the request to get user data
 			userData, err := api.GetUserData(url, token)
@@ -69,9 +69,9 @@ Example usage:
 	}
 
 	// Add flags to the me command
-	meCmd.Flags().StringVar(&host, "host", "0.0.0.0", "Host for the service")
-	meCmd.Flags().IntVar(&port, "port", 8417, "Port for the service")
-	meCmd.Flags().BoolVar(&ssl, "ssl", false, "Use SSL (https) for the connection")
+	meCmd.Flags().StringVar(&host, "host", helper.DefaultHost(), "Host for the service")
+	meCmd.Flags().StringVar(&port, "port", helper.DefaultPort(), "Port for the service")
+	meCmd.Flags().BoolVar(&ssl, "ssl", helper.DefaultSSL(), "Use SSL (https) for the connection")
 	meCmd.Flags().StringVar(&credsPath, "creds-path", helper.GetDefaultCredsPath(), "Path to the credentials file")
 
 	// Return the me command

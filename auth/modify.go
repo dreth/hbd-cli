@@ -5,6 +5,7 @@ import (
 	"hbd-cli/api"
 	"hbd-cli/helper"
 	"hbd-cli/structs"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -12,7 +13,7 @@ import (
 
 func ModifyUser() *cobra.Command {
 	var host string
-	var port int
+	var port string
 	var newEmail string
 	var newPassword string
 	var newReminderTime string
@@ -36,12 +37,19 @@ Environment variables:
   HBD_NEW_TIMEZONE - The new timezone for the reminder.
   HBD_NEW_TELEGRAM_BOT_API_KEY - The new Telegram bot API key.
   HBD_NEW_TELEGRAM_USER_ID - The new Telegram user ID.
+  HBD_HOST - The host for the service. Defaults to 0.0.0.0.
+  HBD_PORT - The port for the service.
+  HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
   hbd-cli modify-user --new-email="newuser@example.com" --new-password="newpassword" --new-reminder-time="15:04" --new-timezone="America/New_York" --new-telegram-bot-api-key="your-new-bot-api-key" --new-telegram-user-id="your-new-user-id"
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
+			// Load env vars
+			helper.LoadEnvVars()
+
 			// Load credentials
+			credsPath = filepath.Join(credsPath, host)
 			creds, err := helper.LoadCredentials(credsPath)
 			helper.HandleError("Error loading credentials from credentials file", err)
 
@@ -76,14 +84,8 @@ Example usage:
 				newTelegramUserID = viper.GetString("HBD_NEW_TELEGRAM_USER_ID")
 			}
 
-			// Determine protocol based on ssl flag
-			protocol := "http"
-			if ssl {
-				protocol = "https"
-			}
-
 			// Create the URL
-			url := fmt.Sprintf("%s://%s:%d", protocol, host, port)
+			url := helper.GenUrl(host, port, ssl)
 
 			// Get the user's existing data by calling the Me endpoint and fill up the missing fields with the existing data
 			userData, err := api.GetUserData(url, token)
@@ -125,15 +127,15 @@ Example usage:
 	}
 
 	// Add flags to the modify-user command
-	modifyUserCmd.Flags().StringVar(&host, "host", "0.0.0.0", "Host for the service")
-	modifyUserCmd.Flags().IntVar(&port, "port", 8417, "Port for the service")
+	modifyUserCmd.Flags().StringVar(&host, "host", helper.DefaultHost(), "Host for the service")
+	modifyUserCmd.Flags().StringVar(&port, "port", helper.DefaultPort(), "Port for the service")
 	modifyUserCmd.Flags().StringVar(&newEmail, "new-email", "", "New email for the user")
 	modifyUserCmd.Flags().StringVar(&newPassword, "new-password", "", "New password for the user")
 	modifyUserCmd.Flags().StringVar(&newReminderTime, "new-reminder-time", "", "New reminder time (HH:MM) for the user")
 	modifyUserCmd.Flags().StringVar(&newTimezone, "new-timezone", "", "New timezone for the reminder")
 	modifyUserCmd.Flags().StringVar(&newTelegramBotAPIKey, "new-telegram-bot-api-key", "", "New Telegram bot API key for the user")
 	modifyUserCmd.Flags().StringVar(&newTelegramUserID, "new-telegram-user-id", "", "New Telegram user ID for the user")
-	modifyUserCmd.Flags().BoolVar(&ssl, "ssl", false, "Use SSL (https) for the connection")
+	modifyUserCmd.Flags().BoolVar(&ssl, "ssl", helper.DefaultSSL(), "Use SSL (https) for the connection")
 	modifyUserCmd.Flags().StringVar(&credsPath, "creds-path", helper.GetDefaultCredsPath(), "Path to the credentials file")
 
 	// Return the modify-user command

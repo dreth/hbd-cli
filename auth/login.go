@@ -5,6 +5,7 @@ import (
 	"hbd-cli/api"
 	"hbd-cli/helper"
 	"hbd-cli/structs"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -12,7 +13,7 @@ import (
 
 func Login() *cobra.Command {
 	var host string
-	var port int
+	var port string
 	var email string
 	var password string
 	var ssl bool
@@ -28,15 +29,19 @@ command-line flags or through environment variables.
 Environment variables:
   HBD_EMAIL - The email address used for login.
   HBD_PASSWORD - The password used for login.
+  HBD_HOST - The host for the service. Defaults to 0.0.0.0.
+  HBD_PORT - The port for the service. 
+  HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
   hbd-cli login --email="user@example.com" --password="yourpassword" --host="example.com" --ssl --creds-path="~/.hbd/credentials"
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
-			// Read env vars
-			viper.AutomaticEnv()
+			// Load env vars
+			helper.LoadEnvVars()
 
 			// Load credentials
+			credsPath = filepath.Join(credsPath, host)
 			creds, err := helper.LoadCredentials(credsPath)
 			helper.HandleError("Error loading credentials from credentials file", err)
 
@@ -54,14 +59,8 @@ Example usage:
 				helper.HandleErrorExitStr("Error authenticating", "email and password must be provided either via flags or environment variables")
 			}
 
-			// Determine protocol based on ssl flag
-			protocol := "http"
-			if ssl {
-				protocol = "https"
-			}
-
 			// Create the URL
-			url := fmt.Sprintf("%s://%s:%d", protocol, host, port)
+			url := helper.GenUrl(host, port, ssl)
 
 			// Create the JSON payload
 			loginReq := structs.LoginRequest{
@@ -85,11 +84,11 @@ Example usage:
 	}
 
 	// Add flags to the login command
-	loginCmd.Flags().StringVar(&host, "host", "0.0.0.0", "Host for the service")
-	loginCmd.Flags().IntVar(&port, "port", 8417, "Port for the service")
+	loginCmd.Flags().StringVar(&host, "host", helper.DefaultHost(), "Host for the service")
+	loginCmd.Flags().StringVar(&port, "port", helper.DefaultPort(), "Port for the service")
 	loginCmd.Flags().StringVar(&email, "email", "", "Email for login")
 	loginCmd.Flags().StringVar(&password, "password", "", "Password for login")
-	loginCmd.Flags().BoolVar(&ssl, "ssl", false, "Use SSL (https) for the connection")
+	loginCmd.Flags().BoolVar(&ssl, "ssl", helper.DefaultSSL(), "Use SSL (https) for the connection")
 	loginCmd.Flags().StringVar(&credsPath, "creds-path", helper.GetDefaultCredsPath(), "Path to the credentials file")
 
 	// Return the login command

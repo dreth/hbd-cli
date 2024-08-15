@@ -18,6 +18,15 @@ func main() {
 	rootCmd.AddCommand(auth.Me())
 	rootCmd.AddCommand(auth.ModifyUser())
 
+	// Splash screen
+	println(`
+  _     _         _            _ _ 
+ | |__ | |__   __| |       ___| (_)
+ | '_ \| '_ \ / _' |_____ / __| | |
+ | | | | |_) | (_| |_____| (__| | |
+ |_| |_|_.__/ \__,_|      \___|_|_|
+`)
+
 	// Execute the root command
 	rootCmd.Execute()
 }
