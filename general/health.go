@@ -15,7 +15,7 @@ func HealthCheck() *cobra.Command {
 
 	var healthCheckCmd = &cobra.Command{
 		Use:   "health",
-		Short: "Healthcheck the HBD service",
+		Short: "Health check the HBD service",
 		Long: `The health command checks the readiness of the HBD service.
 
 Environment variables:

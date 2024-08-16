@@ -1,16 +1,22 @@
 package general
 
+import "github.com/fatih/color"
+
 func SplashScreen(includeDesc bool) string {
-	splash := "\033[34m" + `
+	// Color the splash screen
+	c := color.New(color.FgBlue)
+	c2 := color.New(color.FgCyan)
+
+	splash := c.Sprint(`
   _     _         _          _ _ 
  | |__ | |__   __| |     ___| (_)
  | '_ \| '_ \ / _' |___ / __| | |
  | | | | |_) | (_| |___| (__| | |
  |_| |_|_.__/ \__,_|    \___|_|_|
- ` + "\033[0m"
+ `)
 
 	if includeDesc {
-		splash += "\033[2m" + `
+		splash += c2.Sprint(`
  Welcome to hbd-cli! This is a CLI tool to manage 
  birthday reminders using an HBD backend.
 
@@ -20,7 +26,7 @@ func SplashScreen(includeDesc bool) string {
  or use our instance: https://hbd.lotiguere.com
  
  If you encounter any issues or have any suggestions, 
- feel free to open an issue: https://github.com/dreth/hbd-cli` + "\033[0m"
+ feel free to open an issue: https://github.com/dreth/hbd-cli`)
 	}
 
 	return splash

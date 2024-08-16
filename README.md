@@ -1,6 +1,6 @@
 # hbd-cli
 
-This is a CLI for the HBD app: https://github.com/dreth/hbd
+This is a CLI for the HBD app: <https://github.com/dreth/hbd>
 
 HBD is a birthday reminder app with a backend and a frontend. This CLI is a way to interact with the backend, so that users that prefer the terminal can use the app without having to open the browser.
 
@@ -33,7 +33,7 @@ Available Commands:
   auth        Authentication related commands (login, register, etc.)
   birthdays   Birthday related commands (add, list, delete, modify)
   completion  Generate the autocompletion script for the specified shell
-  health      Healthcheck the HBD service
+  health      Health check the HBD service
   help        Help about any command
 
 Flags:

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"hbd-cli/auth"
 	"hbd-cli/birthdays"
 	"hbd-cli/general"
@@ -14,9 +13,9 @@ var Version = "dev"
 func main() {
 	var rootCmd = &cobra.Command{
 		Use:     "hbd",
-		Short:   general.SplashScreen(true),
-		Long:    general.SplashScreen(true),
-		Version: general.SplashScreen(false) + "\n" + fmt.Sprintf("hbd-cli version: %s", Version) + "\033[32m",
+		Short:   general.SplashScreen(true) + "\n" + CheckForNewVersion(),
+		Long:    general.SplashScreen(true) + "\n" + CheckForNewVersion(),
+		Version: general.SplashScreen(false) + "\n" + HBDCLIVersion() + "\n",
 	}
 
 	// Create an 'auth' parent command
