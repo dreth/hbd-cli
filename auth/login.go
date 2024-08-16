@@ -31,7 +31,7 @@ Environment variables:
   HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
-  hbd-cli login --email="user@hbd.lotiguere.com" --password="yourpassword" --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials" --token-duration=3600
+  hbd-cli auth login --email="user@hbd.lotiguere.com" --password="yourpassword" --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials" --token-duration=3600
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars

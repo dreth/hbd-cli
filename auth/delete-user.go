@@ -23,7 +23,7 @@ func DeleteUser() *cobra.Command {
 This action is irreversible, and all your data will be lost.
 
 Example usage:
-  hbd-cli delete-user --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials"
+  hbd-cli auth delete-user --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials"
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars

@@ -35,7 +35,7 @@ Environment variables:
   HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
-  hbd-cli register --email="user@hbd.lotiguere.com" --password="yourpassword" --reminder-time="15:04" --timezone="America/New_York" --telegram-bot-api-key="your-bot-api-key" --telegram-user-id="your-user-id"
+  hbd-cli auth register --email="user@hbd.lotiguere.com" --password="yourpassword" --reminder-time="15:04" --timezone="America/New_York" --telegram-bot-api-key="your-bot-api-key" --telegram-user-id="your-user-id"
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars

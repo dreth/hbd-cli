@@ -35,7 +35,7 @@ Environment variables:
   HBD_SSL - Use SSL (https) for the connection.
 
 Example usage:
-  hbd-cli modify-user --new-email="newuser@hbd.lotiguere.com" --new-password="newpassword" --new-reminder-time="15:04" --new-timezone="America/New_York" --new-telegram-bot-api-key="your-new-bot-api-key" --new-telegram-user-id="your-new-user-id"
+  hbd-cli auth modify-user --new-email="newuser@hbd.lotiguere.com" --new-password="newpassword" --new-reminder-time="15:04" --new-timezone="America/New_York" --new-telegram-bot-api-key="your-new-bot-api-key" --new-telegram-user-id="your-new-user-id"
 		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars
@@ -54,7 +54,7 @@ Example usage:
 
 			// Check if the token is still empty
 			if token == "" {
-				helper.HandleErrorExitStr("Error", "A valid JWT token must be provided either via the credentials file or the environment variable HBD_TOKEN")
+				helper.HandleErrorExitStr("Error", "A valid JWT token must be provided either via the credentials file")
 			}
 
 			// Check if user details are provided via environment variables
@@ -111,7 +111,6 @@ Example usage:
 				// Make the request to modify user details
 				success, err := api.ModifyUserWithEmail(url, token, modifyUserReq, tokenDuration)
 				helper.HandleErrorExit("Error modifying user details", err)
-				println(success.Token)
 
 				// Save the new token to the credentials file
 				creds.Token = success.Token
