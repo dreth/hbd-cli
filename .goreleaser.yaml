@@ -49,3 +49,17 @@ release:
     name: hbd-cli
   draft: false
 
+nfpms:
+  - id: hbd-cli
+    package_name: hbd-cli
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    vendor: Daniel Alonso
+    homepage: https://github.com/dreth/hbd-cli
+    maintainer: Daniel Alonso <hbd@m.dac.ac>
+    description: hbd-cli is a CLI tool to accompany the HBD project (https://github.com/dreth/hbd)
+    license: GPL-3.0
+    formats:
+      - apk
+      - deb
+      - rpm
+    bindir: /usr/bin
