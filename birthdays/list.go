@@ -17,7 +17,17 @@ func ListBirthdays() *cobra.Command {
 	var listBirthdaysCmd = &cobra.Command{
 		Use:   "list",
 		Short: "List all birthdays",
-		Long:  `The list-birthdays command retrieves and displays all the birthdays associated with your account.`,
+		Long:  `The list-birthdays command retrieves and displays all the birthdays associated with your account.
+		
+Environment variables:
+  HBD_CREDS_PATH - Path to the credentials file.
+  HBD_HOST - The host for the service. Defaults to
+  HBD_PORT - The port for the service.
+  HBD_SSL - Use SSL (https) for the connection.
+
+Example usage:
+  hbd-cli birthdays list --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials"
+		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars
 			helper.LoadEnvVars()

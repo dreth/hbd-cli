@@ -27,6 +27,9 @@ func GetDefaultCredsPath() string {
 
 // LoadCredentials loads the credentials from the specified path
 func LoadCredentials(path string) (*Credentials, error) {
+	// Interpret `~` as home directory
+	path = InterpretTildeAsHomeDir(path)
+
 	// Open the file
 	file, err := os.Open(path)
 	if err != nil {
@@ -49,6 +52,9 @@ func LoadCredentials(path string) (*Credentials, error) {
 
 // SaveCredentials saves the credentials to the specified path
 func SaveCredentials(path string, creds *Credentials) error {
+	// Interpret `~` as home directory
+	path = InterpretTildeAsHomeDir(path)
+
 	// Create the directory if it does not exist
 	err := os.MkdirAll(filepath.Dir(path), 0700)
 	HandleErrorExit("Error creating credentials directory", err)
@@ -64,6 +70,9 @@ func SaveCredentials(path string, creds *Credentials) error {
 
 // DeleteCredentials deletes the credentials file at the specified path.
 func DeleteCredentials(credsPath string) error {
+	// Interpret `~` as home directory
+	credsPath = InterpretTildeAsHomeDir(credsPath)
+
 	// Attempt to remove the file
 	err := os.Remove(credsPath)
 	if err != nil {

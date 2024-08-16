@@ -24,6 +24,7 @@ Environment variables:
   HBD_HOST - The host for the service. Defaults to 0.0.0.0.
   HBD_PORT - The port for the service.
   HBD_SSL - Use SSL (https) for the connection.
+  HBD_CREDS_PATH - Path to the credentials file.
 
 Example usage:
   hbd-cli auth me --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials" --dotenv

@@ -33,6 +33,7 @@ Environment variables:
   HBD_HOST - The host for the service. Defaults to 0.0.0.0.
   HBD_PORT - The port for the service.
   HBD_SSL - Use SSL (https) for the connection.
+  HBD_CREDS_PATH - Path to the credentials file.
 
 Example usage:
   hbd-cli auth register --email="user@hbd.lotiguere.com" --password="yourpassword" --reminder-time="15:04" --timezone="America/New_York" --telegram-bot-api-key="your-bot-api-key" --telegram-user-id="your-user-id"

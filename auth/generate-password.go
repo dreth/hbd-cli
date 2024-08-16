@@ -17,6 +17,11 @@ func GeneratePassword() *cobra.Command {
 		Short: "Generate a new password",
 		Long: `The generate-password command requests the HBD server to generate a new password.
 
+Environment variables:
+  HBD_HOST - The host for the service. Defaults to
+  HBD_PORT - The port for the service.
+  HBD_SSL - Use SSL (https) for the connection.
+
 Example usage:
   hbd-cli auth generate-password --host="hbd.lotiguere.com" --ssl
 		`,

@@ -71,11 +71,11 @@ func AddBirthday(url, token string, birthday structs.BirthdayNameDateAdd) (*stru
 	return &birthdayFull, err
 }
 
-// Check user reminders
-func CheckBirthdays(url, token string, user structs.LoginRequest) (*structs.Success, error) {
+// Force check birthdays
+func CheckBirthdays(url, token string) (*structs.Success, error) {
 	var success structs.Success
 	endpoint := fmt.Sprintf("%s/api/check-birthdays", strings.TrimRight(url, "/"))
-	err := makeRequest("POST", endpoint, user, token, &success, 0)
+	err := makeRequest("PATCH", endpoint, nil, token, &success, 0)
 	return &success, err
 }
 

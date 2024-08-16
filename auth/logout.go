@@ -20,6 +20,10 @@ func Logout() *cobra.Command {
 		Short: "Log out from your HBD account (clean up saved token)",
 		Long: `Logging out cleans up the saved token from the credentials file in the designated credentials path (default is ~/.hbd/credentials/<host>) for a given HBD host.
 
+Environment variables:
+  HBD_CREDS_PATH - Path to the credentials file.
+  HBD_HOST - The host for the service. Defaults to
+
 Example usage:
   hbd-cli auth logout --host="hbd.lotiguere.com" --creds-path="~/.hbd/credentials" -y
 		`,

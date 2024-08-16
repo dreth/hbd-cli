@@ -18,7 +18,17 @@ func AddBirthday() *cobra.Command {
 	var addBirthdayCmd = &cobra.Command{
 		Use:   "add",
 		Short: "Add a new birthday",
-		Long:  `The add-birthday command allows you to add a new birthday to your account.`,
+		Long:  `The add-birthday command allows you to add a new birthday to your account.
+
+Environment variables:
+  HBD_CREDS_PATH - Path to the credentials file.
+  HBD_HOST - The host for the service. Defaults to 0.0.0.0.
+  HBD_PORT - The port for the service. 
+  HBD_SSL - Use SSL (https) for the connection.
+
+Example usage:
+  hbd-cli birthdays add --name="John Doe" --date="2021-12-25" --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials"
+		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			// Load env vars
 			helper.LoadEnvVars()

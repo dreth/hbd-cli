@@ -22,6 +22,12 @@ func DeleteUser() *cobra.Command {
 		Long: `The delete-user command will permanently delete your HBD account.
 This action is irreversible, and all your data will be lost.
 
+Environment variables:
+  HBD_CREDS_PATH - Path to the credentials file.
+  HBD_HOST - The host for the service. Defaults to
+  HBD_PORT - The port for the service.
+  HBD_SSL - Use SSL (https) for the connection.
+
 Example usage:
   hbd-cli auth delete-user --host="hbd.lotiguere.com" --ssl --creds-path="~/.hbd/credentials"
 		`,

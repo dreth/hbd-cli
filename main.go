@@ -45,6 +45,7 @@ func main() {
 	birthdaysCmd.AddCommand(birthdays.ListBirthdays())
 	birthdaysCmd.AddCommand(birthdays.DeleteBirthday())
 	birthdaysCmd.AddCommand(birthdays.ModifyBirthday())
+	birthdaysCmd.AddCommand(birthdays.CheckBirthdays())
 
 	// Add the internal verbs to the root command
 	rootCmd.AddCommand(authCmd)
