@@ -1,22 +1,14 @@
 # hbd-cli
 
-This is a CLI for the HBD app: github.com/dreth/hbd
+This is a CLI for the HBD app: https://github.com/dreth/hbd
 
 HBD is a birthday reminder app with a backend and a frontend. This CLI is a way to interact with the backend, so that users that prefer the terminal can use the app without having to open the browser.
 
 Using the CLI you're able to do all the same things you can do on the frontend.
 
-## Options
-
-The CLI allows you to do the following:
-
-- Authenticate or register an account and perform certain account actions
-  - Login
-  - Logout (Which just removes the file created with the token)
-
 ## Help output
 
-```txt
+```plaintext
   _     _         _          _ _ 
  | |__ | |__   __| |     ___| (_)
  | '_ \| '_ \ / _' |___ / __| | |
