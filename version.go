@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -45,7 +46,7 @@ func CheckForNewVersion() string {
 
 		c2 := color.New(color.FgGreen, color.Bold)
 
-		if Version != latestVersion {
+		if fmt.Sprintf("v%s", Version) != latestVersion {
 			// Print the new version message in red and bold
 			return c.Sprintf("\n A new version of hbd-cli is available: %s (current: %s)\n", latestVersion, Version) + c2.Sprint(" Download it: https://github.com/dreth/hbd-cli/releases/latest")
 		}
